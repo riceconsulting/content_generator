@@ -270,9 +270,17 @@ const ChatMessageBubble: React.FC<{ message: ChatMessage; isLoading: boolean; }>
     );
 };
 
+interface TopicIdeaCardProps {
+  idea: TopicIdea;
+  onSelect: (headline: string) => void;
+  index: number;
+}
 
-const TopicIdeaCard: React.FC<{ idea: TopicIdea; onSelect: (headline: string) => void; }> = ({ idea, onSelect }) => (
-    <div className="bg-background-light dark:bg-surface-dark/60 p-4 rounded-lg border border-border-light dark:border-border-dark/50 transition-shadow hover:shadow-lg animate-fade-in-up flex flex-col h-full">
+const TopicIdeaCard: React.FC<TopicIdeaCardProps> = ({ idea, onSelect, index }) => (
+    <div 
+        className="bg-background-light dark:bg-surface-dark/60 p-4 rounded-lg border border-border-light dark:border-border-dark/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 animate-fade-in-up flex flex-col h-full opacity-0"
+        style={{ animationDelay: `${index * 75}ms` }}
+    >
         <div className="flex-grow">
             <h4 className="font-semibold text-primary-light dark:text-primary-dark">{idea.headline}</h4>
             <p className="text-text-secondary-light dark:text-text-secondary-dark mt-2 text-sm leading-relaxed">{idea.description}</p>
@@ -388,7 +396,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({
         return (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {topicIdeas.map((idea, index) => (
-                    <TopicIdeaCard key={index} idea={idea} onSelect={onSelectTopic} />
+                    <TopicIdeaCard key={index} idea={idea} onSelect={onSelectTopic} index={index} />
                 ))}
             </div>
         );

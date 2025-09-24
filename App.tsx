@@ -513,10 +513,10 @@ const App: React.FC = () => {
   const TabButton: React.FC<{ tabId: AppTab; label: string; }> = ({ tabId, label }) => (
     <button
       onClick={() => setActiveTab(tabId)}
-      className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${
+      className={`px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ${
         activeTab === tabId
-          ? 'bg-primary-light dark:bg-primary-dark text-white'
-          : 'bg-transparent dark:bg-surface-dark/50 text-text-secondary-light dark:text-text-secondary-dark hover:bg-border-light dark:hover:bg-border-dark'
+          ? 'bg-primary-light dark:bg-primary-dark text-white shadow-md'
+          : 'bg-transparent dark:bg-surface-dark/50 text-text-secondary-light dark:text-text-secondary-dark hover:bg-border-light dark:hover:bg-border-dark hover:-translate-y-px'
       }`}
       aria-current={activeTab === tabId ? 'page' : undefined}
     >
@@ -527,7 +527,7 @@ const App: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark text-text-primary-light dark:text-text-primary-dark transition-colors duration-300">
       <Header theme={theme} toggleTheme={toggleTheme} />
-      <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 mb-20">
+      <main className="flex-grow w-full max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 sm:mb-20">
         
         <div className="mb-6 flex justify-center space-x-2 p-1 bg-surface-light/80 dark:bg-surface-dark/80 rounded-lg backdrop-blur-sm">
             <TabButton tabId="topic" label="Topic Idea Generator" />
@@ -535,7 +535,7 @@ const App: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
-          <div className="lg:col-span-4">
+          <div className="lg:col-span-4 xl:col-span-3">
              <div key={activeTab} className="animate-fade-in">
               {activeTab === 'content' ? (
                   <ControlPanel
@@ -558,7 +558,7 @@ const App: React.FC = () => {
               )}
             </div>
           </div>
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-8 xl:col-span-9">
             <ContentDisplay
               activeTab={activeTab}
               chatHistory={chatHistory}

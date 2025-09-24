@@ -1,3 +1,4 @@
+
 import React from 'react';
 import ThemeToggle from './ThemeToggle';
 
@@ -20,7 +21,7 @@ const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
               <img 
                 src="https://assets.zyrosite.com/cdn-cgi/image/format=auto,w=375,fit=crop,q=95/AGB2yyJJKXfD527r/rice-ai-consulting-2-AoPWxvnWOju2GwOz.png" 
                 alt="RICE AI Consulting Logo" 
-                className="h-16 w-16 object-contain" 
+                className="h-12 w-12 sm:h-16 sm:w-16 object-contain" 
               />
             </a>
             <h1 className="ml-4 text-xl sm:text-2xl font-bold tracking-tight text-text-primary-light dark:text-text-primary-dark">

@@ -1,0 +1,6 @@
+{
+  "name": "Content Generator v2",
+  "description": "An application to generate tailored content for various social media platforms using AI. Customize the platform, tone, and length to get the perfect copy for your needs.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}

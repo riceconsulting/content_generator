@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Dropdown from './Dropdown';
 import Spinner from './Spinner';
@@ -28,7 +27,7 @@ const TopicPanel: React.FC<TopicPanelProps> = ({ preferences, setPreferences, on
 
   return (
     <div className="bg-surface-light dark:bg-surface-dark/50 p-6 rounded-xl border border-border-light dark:border-border-dark flex flex-col gap-6 h-full">
-      <h2 className="text-xl font-semibold text-text-primary-light dark:text-text-primary-dark">Generate Topic Ideas</h2>
+      <h2 className="font-heading text-xl font-semibold text-text-primary-light dark:text-text-primary-dark">Generate Topic Ideas</h2>
       
       <div>
         <label htmlFor="industry" className="block text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark mb-2">

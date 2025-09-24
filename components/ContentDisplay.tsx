@@ -1,4 +1,3 @@
-
 import React from 'react';
 import ClipboardIcon from './icons/ClipboardIcon';
 import MagicWandIcon from './icons/MagicWandIcon';
@@ -42,9 +41,9 @@ const topicGenerationSteps = [
 const parseMarkdown = (text: string): string => {
     if (!text) return '';
     // Handle ### headings first
-    let html = text.replace(/^###\s*(.*$)/gm, '<h3 class="text-lg font-bold my-3 text-text-primary-light dark:text-text-primary-dark">$1</h3>');
+    let html = text.replace(/^###\s*(.*$)/gm, '<h3 class="font-heading text-lg font-bold my-3 text-text-primary-light dark:text-text-primary-dark">$1</h3>');
     // Handle ## headings
-    html = html.replace(/^##\s*(.*$)/gm, '<h2 class="text-xl font-bold my-4 text-text-primary-light dark:text-text-primary-dark">$1</h2>');
+    html = html.replace(/^##\s*(.*$)/gm, '<h2 class="font-heading text-xl font-bold my-4 text-text-primary-light dark:text-text-primary-dark">$1</h2>');
     // Handle bold and italics
     html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
@@ -63,7 +62,7 @@ const ErrorOverlay: React.FC<{ message: string }> = ({ message }) => (
         <div className="w-16 h-16 mb-4 border-2 border-dashed border-red-500/50 rounded-full flex items-center justify-center">
             <AlertIcon className="w-8 h-8 text-red-500 animate-pulse" />
         </div>
-        <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">An Error Occurred</h3>
+        <h3 className="font-heading text-lg font-semibold text-red-600 dark:text-red-400">An Error Occurred</h3>
         <p className="mt-2 text-sm text-text-secondary-light dark:text-text-secondary-dark max-w-sm">
             {message}
         </p>
@@ -113,7 +112,7 @@ const ContentPlaceholder: React.FC = () => (
       <div className="w-16 h-16 mx-auto mb-4 border-2 border-dashed border-border-light dark:border-border-dark rounded-full flex items-center justify-center">
         <RobotIcon className="w-8 h-8 text-border-light dark:text-border-dark animate-pulse" />
       </div>
-      <h3 className="text-lg font-medium text-text-secondary-light dark:text-text-secondary-dark">Your content will appear here</h3>
+      <h3 className="font-heading text-lg font-medium text-text-secondary-light dark:text-text-secondary-dark">Your content will appear here</h3>
       <p className="mt-1 text-sm">Fill out the form and click "Generate Content" to start.</p>
     </div>
 );
@@ -123,7 +122,7 @@ const TopicPlaceholder: React.FC = () => (
       <div className="w-16 h-16 mx-auto mb-4 border-2 border-dashed border-border-light dark:border-border-dark rounded-full flex items-center justify-center">
         <LightbulbIcon className="w-8 h-8 text-border-light dark:text-border-dark animate-pulse" />
       </div>
-      <h3 className="text-lg font-medium text-text-secondary-light dark:text-text-secondary-dark">Your topic ideas will appear here</h3>
+      <h3 className="font-heading text-lg font-medium text-text-secondary-light dark:text-text-secondary-dark">Your topic ideas will appear here</h3>
       <p className="mt-1 text-sm">Fill out the form and click "Generate Ideas" to start.</p>
     </div>
 );
@@ -147,7 +146,7 @@ const RefinementControls: React.FC<{
     return (
         <div className="mt-6 pt-6 border-t border-border-light dark:border-border-dark">
             <div className="flex justify-between items-center mb-3">
-                <label htmlFor="refinement-prompt" className="flex items-center text-md font-semibold text-text-primary-light dark:text-text-primary-dark">
+                <label htmlFor="refinement-prompt" className="font-heading flex items-center text-md font-semibold text-text-primary-light dark:text-text-primary-dark">
                     <MagicWandIcon className="w-5 h-5 mr-2 text-primary-light dark:text-primary-dark" />
                     Refine Your Content
                 </label>
@@ -282,7 +281,7 @@ const TopicIdeaCard: React.FC<TopicIdeaCardProps> = ({ idea, onSelect, index }) 
         style={{ animationDelay: `${index * 75}ms` }}
     >
         <div className="flex-grow">
-            <h4 className="font-semibold text-primary-light dark:text-primary-dark">{idea.headline}</h4>
+            <h4 className="font-heading font-semibold text-primary-light dark:text-primary-dark">{idea.headline}</h4>
             <p className="text-text-secondary-light dark:text-text-secondary-dark mt-2 text-sm leading-relaxed">{idea.description}</p>
         </div>
         
@@ -406,7 +405,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({
 
   return (
     <div className="bg-surface-light dark:bg-surface-dark/50 p-6 rounded-xl border border-border-light dark:border-border-dark flex flex-col h-full max-h-[80vh] min-h-[500px]">
-      <h2 className="text-xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-4 flex-shrink-0">
+      <h2 className="font-heading text-xl font-semibold text-text-primary-light dark:text-text-primary-dark mb-4 flex-shrink-0">
         {activeTab === 'topic' ? 'Topic Ideas' : 'Conversation'}
       </h2>
 

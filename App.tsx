@@ -98,6 +98,39 @@ const initialTopicPreferences: TopicPreferences = {
   numIdeas: NUM_IDEAS_OPTIONS[0].value,
 };
 
+// --- ERROR HANDLING HELPER ---
+const getErrorMessage = (error: unknown): string => {
+  console.error("Generation Error:", error); // Keep detailed logging for developers
+
+  if (error instanceof Error) {
+    const message = error.message.toLowerCase();
+    
+    // Check for common network-related fetch errors
+    if (message.includes('failed to fetch') || message.includes('network')) {
+      return "Could not connect to the AI service. Please check your internet connection and try again.";
+    }
+    // Check for API key issues (common message patterns)
+    if (message.includes('api key') && (message.includes('invalid') || message.includes('not found'))) {
+      return "The provided API key is invalid or missing. Please contact the administrator.";
+    }
+    // Check for quota/billing issues
+    if (message.includes('quota') || message.includes('billing')) {
+      return "The daily usage limit for the AI service has been reached. Please try again tomorrow.";
+    }
+    // Check for safety blocks
+    if (message.includes('safety') || message.includes('blocked')) {
+      return "Your request was blocked due to safety settings. Please modify your topic or prompt and try again.";
+    }
+    // A more generic API error, but still useful
+    if (error.message) {
+        return `An error occurred with the AI service: ${error.message}. Please try again.`;
+    }
+  }
+
+  // Fallback for non-Error objects or unknown errors
+  return "An unknown error occurred. Please try again later.";
+};
+
 // Helper to parse the full response from the model into structured parts
 const parseFullResponse = (fullResponseText: string): Omit<ChatMessage, 'role'> => {
   let cleanedFullText = fullResponseText;
@@ -372,8 +405,7 @@ const App: React.FC = () => {
       setContentUsage(newUsage);
 
     } catch (e) {
-      console.error("Content Generation Error:", e);
-      setError("There was a problem on our end. Please try again later.");
+      setError(getErrorMessage(e));
       setChatHistory(prev => prev.filter(msg => msg.role === 'user')); // Clear the loading bubble on error
       chatRef.current = null;
     } finally {
@@ -424,8 +456,7 @@ const App: React.FC = () => {
         setContentUsage(newUsage);
 
     } catch (e) {
-        console.error("Content Refinement Error:", e);
-        setError("There was a problem on our end. Please try again later.");
+        setError(getErrorMessage(e));
         setChatHistory(prev => prev.slice(0, -2)); // Clear the user prompt and loading bubble on error
     } finally {
         setIsLoading(false);
@@ -461,8 +492,7 @@ const App: React.FC = () => {
         setTopicUsage(newUsage);
 
     } catch(e) {
-        console.error("Topic Generation Error:", e);
-        setError("There was a problem on our end. Please try again later.");
+        setError(getErrorMessage(e));
     } finally {
         setIsLoading(false);
     }

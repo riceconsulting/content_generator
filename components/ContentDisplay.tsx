@@ -63,7 +63,7 @@ const ErrorOverlay: React.FC<{ message: string }> = ({ message }) => (
         <div className="w-16 h-16 mb-4 border-2 border-dashed border-red-500/50 rounded-full flex items-center justify-center">
             <AlertIcon className="w-8 h-8 text-red-500 animate-pulse" />
         </div>
-        <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">Generation Failed</h3>
+        <h3 className="text-lg font-semibold text-red-600 dark:text-red-400">An Error Occurred</h3>
         <p className="mt-2 text-sm text-text-secondary-light dark:text-text-secondary-dark max-w-sm">
             {message}
         </p>
@@ -272,10 +272,23 @@ const ChatMessageBubble: React.FC<{ message: ChatMessage; isLoading: boolean; }>
 
 
 const TopicIdeaCard: React.FC<{ idea: TopicIdea; onSelect: (headline: string) => void; }> = ({ idea, onSelect }) => (
-    <div className="bg-background-light dark:bg-surface-dark/60 p-4 rounded-lg border border-border-light dark:border-border-dark/50 transition-shadow hover:shadow-lg animate-fade-in-up">
-        <h4 className="font-semibold text-primary-light dark:text-primary-dark">{idea.headline}</h4>
-        <p className="text-text-secondary-light dark:text-text-secondary-dark mt-2 text-sm leading-relaxed">{idea.description}</p>
-        <div className="text-right mt-4">
+    <div className="bg-background-light dark:bg-surface-dark/60 p-4 rounded-lg border border-border-light dark:border-border-dark/50 transition-shadow hover:shadow-lg animate-fade-in-up flex flex-col h-full">
+        <div className="flex-grow">
+            <h4 className="font-semibold text-primary-light dark:text-primary-dark">{idea.headline}</h4>
+            <p className="text-text-secondary-light dark:text-text-secondary-dark mt-2 text-sm leading-relaxed">{idea.description}</p>
+        </div>
+        
+        {idea.tags && idea.tags.length > 0 && (
+            <div className="mt-4 pt-3 border-t border-border-light dark:border-border-dark/50 flex flex-wrap gap-2">
+                {idea.tags.map((tag, index) => (
+                    <span key={index} className="px-2.5 py-1 bg-hashtag-light/10 dark:bg-hashtag-dark/10 text-hashtag-light dark:text-hashtag-dark text-xs font-semibold rounded-full">
+                        #{tag}
+                    </span>
+                ))}
+            </div>
+        )}
+
+        <div className="text-right mt-4 flex-shrink-0">
             <button
                 onClick={() => onSelect(idea.headline)}
                 className="bg-primary-light/80 hover:bg-primary-light dark:bg-primary-dark/80 dark:hover:bg-primary-dark text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm active:scale-95"
@@ -373,7 +386,7 @@ const ContentDisplay: React.FC<ContentDisplayProps> = ({
             return <div className="flex items-center justify-center h-full"><TopicPlaceholder /></div>;
         }
         return (
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {topicIdeas.map((idea, index) => (
                     <TopicIdeaCard key={index} idea={idea} onSelect={onSelectTopic} />
                 ))}

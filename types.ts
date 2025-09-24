@@ -30,6 +30,7 @@ export interface TopicPreferences {
 export interface TopicIdea {
   headline: string;
   description: string;
+  tags?: string[];
 }
 
 export interface ChatMessage {

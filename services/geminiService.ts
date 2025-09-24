@@ -247,6 +247,25 @@ Output ONLY the corrected, final reference list. Each entry must be on a new lin
   }
 };
 
+const platformGuidance: { [key: string]: string } = {
+  'Website Blog Post': "Follow the 'inverted pyramid' model: most critical information first. Structure with a compelling H1 title, followed by clear H2 and H3 headings for sub-topics. Keep paragraphs short (2-3 sentences max). Include a clear call-to-action (CTA) in the conclusion. Naturally weave in relevant SEO keywords. Suggest where to place internal and external links.",
+  'LinkedIn Article': "Start with a strong, scroll-stopping hook (a question, a bold statement, or a surprising statistic). Use short, single-sentence paragraphs (broetry) for mobile readability. Use 3-5 relevant, niche hashtags at the end. Tag relevant companies or individuals to increase reach. End with a question to encourage comments and discussion.",
+  'Instagram Caption': "Hook the reader in the first line, as the rest is hidden behind '...more'. Use emojis to add personality and create visual breaks. The character limit is 2,200. Encourage engagement by asking a question. For a cleaner look, consider putting the block of 5-15 relevant hashtags in the first comment rather than the caption itself. The CTA should encourage saves, shares, or comments.",
+  'TikTok Script': "Hook is critical: grab attention in the first 1-3 seconds. Write for a spoken format, using simple, punchy language. Structure as a scene-by-scene script with visual cues in parentheses (e.g., '(Points to text overlay showing stats)'). Incorporate on-screen text to reinforce key messages. End with a strong CTA relevant to the platform (e.g., 'Follow for Part 2,' 'Try this filter'). Mention if a trending sound could be used.",
+  'Facebook Post': "Aim for a friendly, community-oriented tone. Visuals are key, so the text should complement an image or video. Ask open-ended questions to drive comments. Tag other pages where relevant. Posts with 1-3 paragraphs often perform well. For longer posts, use bullet points or emojis to break up the text.",
+  'eCommerce Product Description': "Focus on benefits over features. Use sensory and evocative words to help the customer imagine using the product. Use bullet points for key specs and technical details. Address potential customer pain points or objections. Weave in social proof (e.g., 'Join 10,00 a happy customers...'). Include a clear, urgent CTA like 'Add to Cart and Get 10% Off Today'.",
+  'Twitter or X Post': "Adhere to the 280-character limit per tweet. For longer thoughts, structure the content as a numbered thread (e.g., 1/5, 2/5). The first tweet must be a strong hook. Use 1-2 strategic hashtags per tweet. Incorporate multimedia (image, GIF, video) to dramatically increase engagement. Use polls or ask questions to generate replies.",
+  'Pinterest Pin Description': "Pinterest is a visual search engine, so be highly descriptive and keyword-focused. The limit is 500 characters. Write in natural language, not just a list of keywords. Start with a compelling sentence that encourages a click-through to the website. Include a subtle CTA.",
+  'YouTube Video Script': "Hook viewers in the first 10-15 seconds by teasing the video's value or outcome. Write in a natural, conversational style. Structure with a clear intro, 3-4 main points, and an outro. In the script, explicitly ask for engagement: 'Comment below with your thoughts,' 'Like this video if you learned something,' and 'Subscribe and ring the bell.'",
+  'Email Newsletter': "Subject line is paramount: make it short (under 50 characters), curiosity-driven, and personalized. Greet the subscriber by name if possible. Provide immediate value in the first paragraph. Have one primary, crystal-clear CTA button. Use a 'P.S.' for a secondary, low-friction ask. Keep the design simple and mobile-first.",
+  'Reddit Post': "CRITICAL: Check the specific subreddit's rules and culture before writing. The title is everything—make it compelling or descriptive. Be authentic, conversational, and avoid corporate jargon. Use Markdown for formatting (`**bold**`, `*italics*`). Provide genuine value to the community to avoid being downvoted. Engage actively and honestly in the comments.",
+  'Quora Answer': "Start with a direct, summary answer to the question (a TL;DR). Then, elaborate with detailed context, examples, and evidence in the following paragraphs. Use formatting like bolding, bullet points, and images to make the answer highly scannable and authoritative. Disclose any affiliations. If relevant, you can link to an external resource for more information.",
+  'Medium Story': "Craft a powerful, emotionally resonant, or highly useful headline and subtitle. Use a high-quality, relevant cover image. Tell a story or provide a unique, in-depth perspective. Use Medium's formatting tools: pull quotes, section breaks (three dots), and kickers. Tag your story with 5 relevant topics to increase its visibility. Submit to a relevant Publication for broader reach.",
+  'Press Release': "Follow standard press release format: 'FOR IMMEDIATE RELEASE' at the top, a clear and newsworthy headline, and a dateline (CITY, State – Month Day, Year). The first paragraph must summarize the entire story (the 5 Ws). Use a formal, objective tone. Include 1-2 quotes from key executives. End with a boilerplate about the company and media contact information, followed by '###'.",
+  'Ad Copy (Google or Facebook)': "Focus on one clear benefit and one clear CTA. Use strong action verbs. Create urgency or scarcity ('Limited time,' 'Last chance'). For Facebook, ask a question and use emojis in the primary text. For Google Search, ensure the primary keyword is in Headline 1 and the Display Path. Match the ad's message and promise directly to the landing page experience.",
+  'Podcast Script': "Write for the ear, not the eye. Use conversational language, contractions, and short sentences. Structure the episode with clear segments: a teaser/hook intro, main content, and an outro with CTAs (e.g., 'rate and review,' 'join our Patreon'). Include notes for music cues, sound effects, and natural pauses in parentheses.",
+};
+
 
 /**
  * Generates an optimized, detailed prompt for the main content generation task
@@ -257,6 +276,10 @@ Output ONLY the corrected, final reference list. Each entry must be on a new lin
  */
 export const generateOptimizedContentPrompt = (preferences: ContentPreferences, sources: string | null): string => {
   const { topic, platform, tone, wordCount, generateHashtags, referenceType, writerPersona, promotionLevel, creatorName, customNotes } = preferences;
+
+  const platformSpecificGuidance = platformGuidance[platform]
+    ? `\n- **Platform-Specific Guidance:** ${platformGuidance[platform]}`
+    : '';
 
   let sourceInstruction = '';
   const shouldIncludeReferences = referenceType !== 'none';
@@ -351,7 +374,7 @@ ${sourceInstruction}
 
 # USER PREFERENCES
 - **Content Topic:** "${topic}"
-- **Target Platform:** ${platform} (Adapt the style, length, and formatting to be optimal for this platform.)
+- **Target Platform:** ${platform}${platformSpecificGuidance}
 - **Desired Tone of Voice:** ${tone}. The content should feel authentic and engaging for the target audience.
 - **Word Count Target:** Approximately ${wordCount} words.  
    - The acceptable range is **${Math.round(Number(wordCount) * 0.9)} – ${Math.round(Number(wordCount) * 1.1)} words**.  
@@ -397,14 +420,14 @@ Now, based on all of the above, generate the content for the user's request.
  */
 export const generateTopicIdeas = async (preferences: TopicPreferences): Promise<TopicIdea[]> => {
   const { industry, audience, angle, hook, numIdeas } = preferences;
-  const prompt = `You are a creative content strategist and marketing expert. Your task is to generate ${numIdeas} content topic ideas for a specific niche. For each idea, provide a compelling, click-worthy headline and a short 1-2 sentence description explaining the topic.
+  const prompt = `You are a creative content strategist and marketing expert. Your task is to generate ${numIdeas} content topic ideas for a specific niche. For each idea, provide a compelling, click-worthy headline, a short 1-2 sentence description explaining the topic, and a list of 3-5 relevant keyword tags.
 
   **Instructions:**
   - **Industry/Niche:** ${industry}
   - **Target Audience:** ${audience}
   - **Content Angle:** ${angle}
   - **Engagement Hook:** ${hook}
-  - **Output Format:** You must provide your response as a JSON array, where each object has two keys: "headline" and "description". Do not include any other text or markdown formatting.
+  - **Output Format:** You must provide your response as a JSON array, where each object has "headline", "description", and an optional "tags" key. The "tags" key should be an array of strings (without the '#' symbol). Do not include any other text or markdown formatting.
   `;
 
   const response = await ai.models.generateContent({
@@ -424,6 +447,11 @@ export const generateTopicIdeas = async (preferences: TopicPreferences): Promise
             description: {
               type: Type.STRING,
               description: "A brief, 1-2 sentence summary of what the content would be about."
+            },
+            tags: {
+              type: Type.ARRAY,
+              items: { type: Type.STRING },
+              description: "An array of 3-5 relevant keyword tags for the topic (without the '#' symbol)."
             }
           },
           required: ["headline", "description"]

@@ -7,7 +7,7 @@ import TopicPanel from './components/TopicPanel';
 import ContentDisplay from './components/ContentDisplay';
 import { ContentPreferences, ChatMessage, TopicPreferences, TopicIdea } from './types';
 import { PLATFORM_OPTIONS, TONE_OPTIONS, WORD_COUNT_OPTIONS, PERSONA_OPTIONS, PROMOTION_LEVEL_OPTIONS, AUDIENCE_OPTIONS, CONTENT_ANGLE_OPTIONS, HOOK_STYLE_OPTIONS, NUM_IDEAS_OPTIONS } from './constants';
-import { generateOptimizedContentPrompt, generateTopicIdeas, startChatSession, findWebSources } from './services/geminiService';
+import { generateOptimizedContentPrompt, generateTopicIdeas, startChatSession, findWebSources, generateRefinementPrompt } from './services/geminiService';
 import { Chat } from '@google/genai';
 
 type AppTab = 'content' | 'topic';
@@ -393,6 +393,13 @@ const App: React.FC = () => {
       return;
     }
     if (!chatRef.current || !refinementPrompt.trim()) return;
+
+    // Find the last valid model message to refine
+    const lastModelMessage = [...chatHistory].reverse().find(m => m.role === 'model' && m.content && m.content.trim() !== '');
+    if (!lastModelMessage) {
+        setError("Could not find previous content to refine. Please generate some content first.");
+        return;
+    }
     
     setIsLoading(true);
     setIsStreaming(false);
@@ -403,7 +410,10 @@ const App: React.FC = () => {
             { role: 'user', content: refinementPrompt },
             { role: 'model', content: '' }
         ]);
-        const stream = await chatRef.current.sendMessageStream({ message: refinementPrompt });
+
+        const finalRefinementPrompt = generateRefinementPrompt(lastModelMessage, refinementPrompt);
+        
+        const stream = await chatRef.current.sendMessageStream({ message: finalRefinementPrompt });
         await processNewMessageStream(stream, () => setIsStreaming(true));
 
         // ON SUCCESS: Decrement usage count
@@ -421,7 +431,7 @@ const App: React.FC = () => {
         setIsLoading(false);
         setIsStreaming(false);
     }
-  }, []);
+  }, [chatHistory]);
 
   const handleGenerateTopics = useCallback(async () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -20,6 +20,12 @@ interface ControlPanelProps {
   generationLimit: number;
 }
 
+const exampleTopics = [
+  "5 tips for improving productivity while working from home",
+  "A beginner's guide to cryptocurrency",
+  "How to plan a budget-friendly family vacation",
+];
+
 const ControlPanel: React.FC<ControlPanelProps> = ({ preferences, setPreferences, onGenerate, isLoading, generationsLeft, generationLimit }) => {
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,6 +63,23 @@ const ControlPanel: React.FC<ControlPanelProps> = ({ preferences, setPreferences
           className="w-full bg-background-light dark:bg-surface-dark border border-border-light dark:border-border-dark rounded-md p-3 text-text-primary-light dark:text-text-primary-dark placeholder-text-secondary-light dark:placeholder-text-secondary-dark focus:outline-none focus:ring-2 focus:ring-primary-light dark:focus:ring-primary-dark focus:border-transparent sm:text-sm transition"
           aria-label="Content topic"
         />
+        <div className="mt-2">
+            <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark mb-2">
+              Need inspiration? Try one of these:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {exampleTopics.map((topic, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setPreferences(prev => ({ ...prev, topic }))}
+                  className="px-2.5 py-1 bg-background-light dark:bg-surface-dark border border-border-light dark:border-border-dark text-text-secondary-light dark:text-text-secondary-dark text-xs font-medium rounded-full hover:bg-border-light/50 dark:hover:bg-border-dark transition-colors"
+                >
+                  {topic}
+                </button>
+              ))}
+            </div>
+          </div>
       </div>
 
       <Dropdown
